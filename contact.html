@@ -12,21 +12,13 @@
 </head>
 <body>
 
-  <div class="page-tab" aria-hidden="true">IV</div>
-
+  <!-- Nav -->
   <nav class="site-nav">
-    <div class="nav-inner">
-      <a href="/" class="logo">CR<span>U</span>X</a>
-      <div class="nav-links">
-        <a href="/">Introduction</a>
-        <a href="practice.html">The Practice</a>
-        <a href="catalogue.html">Catalogue</a>
-        <a href="contact.html" class="active">Contact</a>
-      </div>
-      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+    <a href="/" class="nav-logo">CR<span>U</span>X</a>
+    <a href="mailto:tanishq@buildwithcrux.com" class="nav-cta">Email Directly</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <div class="nav-mobile">
@@ -38,50 +30,70 @@
   </div>
 
   <main>
-    <section class="hero container">
-      <span class="eyebrow">IV — Contact</span>
+
+    <!-- Hero (shorter on contact page) -->
+    <section class="hero hero-sm">
+      <div class="hero-ghost" aria-hidden="true">IV</div>
+      <span class="eyebrow hero-eyebrow">IV — Contact</span>
       <h1>Start a conversation.</h1>
-      <p class="lede">We take on a limited number of new partnerships each quarter. Tell us about your audience and what you're hoping to build — we'll follow up within 48 hours.</p>
+      <p class="hero-sub">We take on a limited number of new partnerships each quarter. Tell us about your audience and what you're hoping to build — we'll follow up within 48 hours.</p>
     </section>
 
-    <section class="container section-tight">
+    <!-- Marquee -->
+    <div class="marquee-band" aria-hidden="true">
+      <div class="marquee-track">
+        <span class="m-item">Start a Conversation</span><span class="m-dot">·</span>
+        <span class="m-item">buildwithcrux.com</span><span class="m-dot">·</span>
+        <span class="m-item">Limited Capacity</span><span class="m-dot">·</span>
+        <span class="m-item">48 Hour Reply</span><span class="m-dot">·</span>
+        <span class="m-item">Confidential</span><span class="m-dot">·</span>
+        <span class="m-item">No Sales Funnel</span><span class="m-dot">·</span>
+        <span class="m-item">Real People</span><span class="m-dot">·</span>
+        <!-- duplicate -->
+        <span class="m-item">Start a Conversation</span><span class="m-dot">·</span>
+        <span class="m-item">buildwithcrux.com</span><span class="m-dot">·</span>
+        <span class="m-item">Limited Capacity</span><span class="m-dot">·</span>
+        <span class="m-item">48 Hour Reply</span><span class="m-dot">·</span>
+        <span class="m-item">Confidential</span><span class="m-dot">·</span>
+        <span class="m-item">No Sales Funnel</span><span class="m-dot">·</span>
+        <span class="m-item">Real People</span><span class="m-dot">·</span>
+      </div>
+    </div>
+
+    <!-- Contact grid -->
+    <div class="sec">
       <div class="contact-grid">
 
+        <!-- Info side -->
         <div class="contact-info">
           <h3>What to expect</h3>
-          <p>No automated funnel, no sales call you didn't ask for. A real reply, from a real person, telling you honestly whether and how we can help.</p>
+          <p style="margin-top:14px;">No automated funnel, no sales call you didn't ask for. A real reply, from a real person, telling you honestly whether and how we can help.</p>
 
-          <div class="alt-contact">
-            <span class="label">Prefer email</span>
-            <a href="mailto:tanishq@buildwithcrux.com">tanishq@buildwithcrux.com</a>
+          <div class="c-meta">
+            <span class="c-label">Prefer email</span>
+            <a href="mailto:tanishq@buildwithcrux.com" class="c-email">tanishq@buildwithcrux.com</a>
           </div>
 
-          <p class="cadence-note">Every inquiry is confidential. We don't discuss prospective or existing partnerships with anyone outside CRUX.</p>
+          <p class="c-note">Every inquiry is confidential. We don't discuss prospective or existing partnerships with anyone outside CRUX.</p>
         </div>
 
-        <div class="contact-form-wrap">
+        <!-- Form side -->
+        <div>
           <form id="inquiry-form" novalidate>
             <!--
               ============================================================
-              EMAIL SETUP — read this before launch
+              EMAIL SETUP
               ============================================================
-              This form sends submissions straight to your inbox using
-              Web3Forms (free, no backend needed).
-
-              1. Go to https://web3forms.com and create an access key
-                 using tanishq@buildwithcrux.com
-              2. Copy the access key they give you.
-              3. Replace REPLACE_WITH_YOUR_ACCESS_KEY below with that key.
-
-              Until you do this, the form will show a friendly notice
-              instead of submitting.
+              1. Go to https://web3forms.com
+              2. Create an access key with tanishq@buildwithcrux.com
+              3. Replace REPLACE_WITH_YOUR_ACCESS_KEY below with your key
               ============================================================
             -->
-            <input type="hidden" name="access_key" value="32faca5f-eef8-4f6f-bbee-555c209e7612" />
+            <input type="hidden" name="access_key" value="REPLACE_WITH_YOUR_ACCESS_KEY" />
             <input type="hidden" name="subject" value="New CRUX partnership inquiry" />
             <input type="checkbox" name="botcheck" class="honey" tabindex="-1" autocomplete="off" />
 
-            <div class="field-row">
+            <div class="field-pair">
               <div class="field">
                 <label for="name">Full name</label>
                 <input type="text" id="name" name="name" placeholder="Your name" required />
@@ -97,7 +109,7 @@
               <input type="text" id="handle" name="handle" placeholder="e.g. Instagram — @yourhandle" />
             </div>
 
-            <div class="field-row">
+            <div class="field-pair">
               <div class="field">
                 <label for="audience">Audience size</label>
                 <select id="audience" name="audience_size">
@@ -135,39 +147,51 @@
 
           <div class="form-status error" id="form-error" hidden>
             <h3>Couldn't send that</h3>
-            <p>Something went wrong. Please try again, or email us directly.</p>
+            <p>Something went wrong. Please try again or email us directly.</p>
           </div>
         </div>
 
       </div>
-    </section>
-  </main>
+    </div>
 
-  <footer class="site-footer container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <span class="logo">CR<span>U</span>X</span>
-        <p>Quiet infrastructure for creators. We build it; you stay in the frame.</p>
+    <!-- Explore -->
+    <div class="explore">
+      <div class="explore-head">
+        <span class="explore-title">Explore</span>
+        <p class="explore-sub">Navigate the full picture of what CRUX is and what we build.</p>
       </div>
-      <div class="footer-links">
-        <div class="footer-col">
-          <h4>Pages</h4>
-          <a href="/">Introduction</a>
-          <a href="practice.html">The Practice</a>
-          <a href="catalogue.html">Catalogue</a>
-          <a href="contact.html">Contact</a>
+      <div class="explore-grid">
+        <a href="/" class="explore-card">
+          <span class="ex-num">I</span>
+          <span class="ex-name">Introduction</span>
+          <span class="ex-desc">Who CRUX is and the singular thing we do for creators.</span>
+          <span class="ex-arrow">→</span>
+        </a>
+        <a href="practice.html" class="explore-card">
+          <span class="ex-num">II</span>
+          <span class="ex-name">The Practice</span>
+          <span class="ex-desc">The three-stage process behind every partnership we run.</span>
+          <span class="ex-arrow">→</span>
+        </a>
+        <a href="catalogue.html" class="explore-card">
+          <span class="ex-num">III</span>
+          <span class="ex-name">Catalogue</span>
+          <span class="ex-desc">Three systems — Vault, Communities, Audits — built for your audience.</span>
+          <span class="ex-arrow">→</span>
+        </a>
+        <div class="explore-current" aria-current="page">
+          <span class="ex-num">IV</span>
+          <span class="ex-name">Contact</span>
+          <span class="ex-desc">Start a conversation. We follow up within 48 hours.</span>
         </div>
-        <div class="footer-col">
-          <h4>Direct</h4>
-          <a href="mailto:tanishq@buildwithcrux.com">tanishq@buildwithcrux.com</a>
-        </div>
+      </div>
+      <div class="explore-foot">
+        <span>© 2026 CRUX. All partnerships are confidential.</span>
+        <a href="mailto:tanishq@buildwithcrux.com" style="color:inherit;">tanishq@buildwithcrux.com</a>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 CRUX. All partnerships are confidential.</span>
-      <span>IV — Contact</span>
-    </div>
-  </footer>
+
+  </main>
 
   <script src="script.js"></script>
 </body>
