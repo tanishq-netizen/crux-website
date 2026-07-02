@@ -12,21 +12,13 @@
 </head>
 <body>
 
-  <div class="page-tab" aria-hidden="true">III</div>
-
+  <!-- Nav -->
   <nav class="site-nav">
-    <div class="nav-inner">
-      <a href="/" class="logo">CR<span>U</span>X</a>
-      <div class="nav-links">
-        <a href="/">Introduction</a>
-        <a href="practice.html">The Practice</a>
-        <a href="catalogue.html" class="active">Catalogue</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+    <a href="/" class="nav-logo">CR<span>U</span>X</a>
+    <a href="contact.html" class="nav-cta">Contact</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <div class="nav-mobile">
@@ -38,40 +30,67 @@
   </div>
 
   <main>
-    <section class="hero container">
-      <span class="eyebrow">III — Catalogue</span>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-ghost" aria-hidden="true">III</div>
+      <span class="eyebrow hero-eyebrow">III — Catalogue</span>
       <h1>Three systems. One quiet operator.</h1>
-      <p class="lede">Each of these can stand alone, or build on the one before it — most partnerships start with an audit, even if they end up somewhere else entirely.</p>
+      <p class="hero-sub">Each of these can stand alone or build on the one before it. Most partnerships start with an audit — even if they end up somewhere else entirely.</p>
+      <div class="hero-bottom">
+        <a href="contact.html" class="btn btn-primary">Start a Conversation</a>
+        <span class="hero-scroll" aria-hidden="true">Scroll</span>
+      </div>
     </section>
 
-    <section class="container section-tight">
+    <!-- Marquee -->
+    <div class="marquee-band" aria-hidden="true">
+      <div class="marquee-track">
+        <span class="m-item">The Vault</span><span class="m-dot">·</span>
+        <span class="m-item">Premium Communities</span><span class="m-dot">·</span>
+        <span class="m-item">Monetization Audits</span><span class="m-dot">·</span>
+        <span class="m-item">Digital Lookbooks</span><span class="m-dot">·</span>
+        <span class="m-item">Discord Servers</span><span class="m-dot">·</span>
+        <span class="m-item">Revenue Strategy</span><span class="m-dot">·</span>
+        <span class="m-item">Built Under Your Name</span><span class="m-dot">·</span>
+        <!-- duplicate -->
+        <span class="m-item">The Vault</span><span class="m-dot">·</span>
+        <span class="m-item">Premium Communities</span><span class="m-dot">·</span>
+        <span class="m-item">Monetization Audits</span><span class="m-dot">·</span>
+        <span class="m-item">Digital Lookbooks</span><span class="m-dot">·</span>
+        <span class="m-item">Discord Servers</span><span class="m-dot">·</span>
+        <span class="m-item">Revenue Strategy</span><span class="m-dot">·</span>
+        <span class="m-item">Built Under Your Name</span><span class="m-dot">·</span>
+      </div>
+    </div>
+
+    <!-- Offer cards -->
+    <div class="sec">
 
       <article class="offer-card" id="vault">
         <div class="offer-head">
           <div>
-            <span class="eyebrow">The Vault</span>
+            <span class="eyebrow" style="margin-bottom:14px;display:flex;">The Vault</span>
             <h2>Digital Lookbooks</h2>
           </div>
           <span class="offer-tag">Product</span>
         </div>
         <p class="lede">A private, paywalled archive — lookbooks, guides, breakdowns, templates, whatever format matches your niche — built and kept current under your name, for the audience that already asks how you do it.</p>
-
-        <div class="offer-columns">
-          <div class="offer-included">
-            <h4>What's Inside</h4>
+        <div class="offer-cols">
+          <div>
+            <span class="offer-col-label">What's Inside</span>
             <ul class="offer-list">
               <li>Content sourcing, writing, and design for the archive itself</li>
               <li>Paywall, delivery, and access setup on a platform that fits you</li>
               <li>Ongoing seasonal or rolling updates, so it never goes stale</li>
             </ul>
           </div>
-          <div class="offer-for">
-            <h4>Best For</h4>
-            <p>Creators whose audience regularly asks "where do you get that" or "how do you actually put this together" — and would happily pay for the direct answer.</p>
+          <div>
+            <span class="offer-col-label">Best For</span>
+            <p style="font-size:0.93rem;">Creators whose audience regularly asks "where do you get that" or "how do you actually put this together" — and would happily pay for the direct answer.</p>
           </div>
         </div>
-
-        <div class="offer-footer">
+        <div class="offer-foot">
           <a href="contact.html?interest=vault">Inquire about The Vault →</a>
         </div>
       </article>
@@ -79,29 +98,27 @@
       <article class="offer-card" id="communities">
         <div class="offer-head">
           <div>
-            <span class="eyebrow">Premium Communities</span>
+            <span class="eyebrow" style="margin-bottom:14px;display:flex;">Premium Communities</span>
             <h2>Premium Paid Communities</h2>
           </div>
           <span class="offer-tag">Service</span>
         </div>
         <p class="lede">A private Discord (or similar) space built for the most invested 1–5% of your audience — the ones already DMing you for closer access. We architect it, moderate it, and run it day to day.</p>
-
-        <div class="offer-columns">
-          <div class="offer-included">
-            <h4>What's Inside</h4>
+        <div class="offer-cols">
+          <div>
+            <span class="offer-col-label">What's Inside</span>
             <ul class="offer-list">
               <li>Server architecture, channel structure, and member rules</li>
-              <li>Vetted onboarding and access tied to your existing audience</li>
-              <li>Day-to-day moderation, plus retention and engagement programming</li>
+              <li>Vetted onboarding tied to your existing audience</li>
+              <li>Day-to-day moderation, retention, and engagement programming</li>
             </ul>
           </div>
-          <div class="offer-for">
-            <h4>Best For</h4>
-            <p>Creators with a vocal, loyal core who want closer access to you — without you personally moderating a server every night.</p>
+          <div>
+            <span class="offer-col-label">Best For</span>
+            <p style="font-size:0.93rem;">Creators with a vocal, loyal core who want closer access to you — without you personally moderating a server every night.</p>
           </div>
         </div>
-
-        <div class="offer-footer">
+        <div class="offer-foot">
           <a href="contact.html?interest=communities">Inquire about Communities →</a>
         </div>
       </article>
@@ -109,69 +126,71 @@
       <article class="offer-card" id="audits">
         <div class="offer-head">
           <div>
-            <span class="eyebrow">Audits</span>
+            <span class="eyebrow" style="margin-bottom:14px;display:flex;">Audits</span>
             <h2>Monetization &amp; Digital Audits</h2>
           </div>
           <span class="offer-tag">Strategy</span>
         </div>
         <p class="lede">Before anything gets built, we give you a clear, honest read on what your specific audience would actually pay for — and what order to build it in.</p>
-
-        <div class="offer-columns">
-          <div class="offer-included">
-            <h4>What's Inside</h4>
+        <div class="offer-cols">
+          <div>
+            <span class="offer-col-label">What's Inside</span>
             <ul class="offer-list">
               <li>Audience and content analysis — where trust and attention already concentrate</li>
               <li>A scan of comparable offers in your category, and where the gaps are</li>
-              <li>A prioritized build plan, which can feed directly into a Vault or a Community</li>
+              <li>A prioritised build plan, which can feed into a Vault or a Community</li>
             </ul>
           </div>
-          <div class="offer-for">
-            <h4>Best For</h4>
-            <p>Creators who know they're leaving money on the table, but aren't sure where to start — or want a second opinion on an offer they're already running.</p>
+          <div>
+            <span class="offer-col-label">Best For</span>
+            <p style="font-size:0.93rem;">Creators who know they're leaving money on the table, but aren't sure where to start — or want a second opinion on an offer they're already running.</p>
           </div>
         </div>
-
-        <div class="offer-footer">
+        <div class="offer-foot">
           <a href="contact.html?interest=audit">Inquire about an Audit →</a>
         </div>
       </article>
 
-    </section>
+    </div>
 
-    <section class="closing-banner container">
-      <span class="eyebrow" style="justify-content:center;">Not Sure Which Fits</span>
-      <h2>Start with a conversation — we'll point you the right way.</h2>
-      <div class="btn-row">
-        <a href="contact.html" class="btn btn-primary">Start a Conversation</a>
+    <!-- Explore -->
+    <div class="explore">
+      <div class="explore-head">
+        <span class="explore-title">Explore</span>
+        <p class="explore-sub">Navigate the full picture of what CRUX is and what we build.</p>
       </div>
-    </section>
+      <div class="explore-grid">
+        <a href="/" class="explore-card">
+          <span class="ex-num">I</span>
+          <span class="ex-name">Introduction</span>
+          <span class="ex-desc">Who CRUX is and the singular thing we do for creators.</span>
+          <span class="ex-arrow">→</span>
+        </a>
+        <a href="practice.html" class="explore-card">
+          <span class="ex-num">II</span>
+          <span class="ex-name">The Practice</span>
+          <span class="ex-desc">The three-stage process behind every partnership we run.</span>
+          <span class="ex-arrow">→</span>
+        </a>
+        <div class="explore-current" aria-current="page">
+          <span class="ex-num">III</span>
+          <span class="ex-name">Catalogue</span>
+          <span class="ex-desc">Three systems — Vault, Communities, Audits — built for your audience.</span>
+        </div>
+        <a href="contact.html" class="explore-card">
+          <span class="ex-num">IV</span>
+          <span class="ex-name">Contact</span>
+          <span class="ex-desc">Start a conversation. We follow up within 48 hours.</span>
+          <span class="ex-arrow">→</span>
+        </a>
+      </div>
+      <div class="explore-foot">
+        <span>© 2026 CRUX. All partnerships are confidential.</span>
+        <a href="mailto:tanishq@buildwithcrux.com" style="color:inherit;">tanishq@buildwithcrux.com</a>
+      </div>
+    </div>
+
   </main>
-
-  <footer class="site-footer container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <span class="logo">CR<span>U</span>X</span>
-        <p>Quiet infrastructure for creators. We build it; you stay in the frame.</p>
-      </div>
-      <div class="footer-links">
-        <div class="footer-col">
-          <h4>Pages</h4>
-          <a href="/">Introduction</a>
-          <a href="practice.html">The Practice</a>
-          <a href="catalogue.html">Catalogue</a>
-          <a href="contact.html">Contact</a>
-        </div>
-        <div class="footer-col">
-          <h4>Direct</h4>
-          <a href="mailto:tanishq@buildwithcrux.com">tanishq@buildwithcrux.com</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 CRUX. All partnerships are confidential.</span>
-      <span>III — Catalogue</span>
-    </div>
-  </footer>
 
   <script src="script.js"></script>
 </body>
