@@ -1,17 +1,26 @@
-// CRUX — shared behavior
+// CRUX v2 — script.js
 
 document.addEventListener("DOMContentLoaded", function () {
-  /* Mobile nav toggle */
-  var toggle = document.querySelector(".nav-toggle");
-  var mobileNav = document.querySelector(".nav-mobile");
 
+  // Nav: add .scrolled class after 40px
+  var nav = document.querySelector(".site-nav");
+  if (nav) {
+    function onScroll() {
+      nav.classList.toggle("scrolled", window.scrollY > 40);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
+  // Mobile nav toggle
+  var toggle    = document.querySelector(".nav-toggle");
+  var mobileNav = document.querySelector(".nav-mobile");
   if (toggle && mobileNav) {
     toggle.addEventListener("click", function () {
-      var isOpen = mobileNav.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-      document.body.style.overflow = isOpen ? "hidden" : "";
+      var open = mobileNav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.style.overflow = open ? "hidden" : "";
     });
-
     mobileNav.querySelectorAll("a").forEach(function (link) {
       link.addEventListener("click", function () {
         mobileNav.classList.remove("open");
@@ -20,69 +29,60 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* Pre-select "area of interest" on the contact form via ?interest=vault|communities|audit */
-  var interestSelect = document.getElementById("interest");
-  if (interestSelect) {
-    var params = new URLSearchParams(window.location.search);
-    var interest = params.get("interest");
-    if (interest && interestSelect.querySelector('option[value="' + interest + '"]')) {
-      interestSelect.value = interest;
+  // Pre-select interest dropdown via ?interest= URL param
+  var sel = document.getElementById("interest");
+  if (sel) {
+    var param = new URLSearchParams(window.location.search).get("interest");
+    if (param && sel.querySelector('option[value="' + param + '"]')) {
+      sel.value = param;
     }
   }
 
-  /* Inquiry form submission via Web3Forms */
-  var form = document.getElementById("inquiry-form");
+  // Contact form → Web3Forms
+  var form    = document.getElementById("inquiry-form");
   if (form) {
-    var successBox = document.getElementById("form-success");
-    var errorBox = document.getElementById("form-error");
+    var success = document.getElementById("form-success");
+    var errorEl = document.getElementById("form-error");
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      var key = form.querySelector('input[name="access_key"]').value;
-      if (!key || key.indexOf("REPLACE_WITH") === 0) {
-        errorBox.querySelector("p").textContent =
-          "The form isn't connected to an inbox yet — add your Web3Forms access key in contact.html before going live.";
-        errorBox.hidden = false;
-        successBox.hidden = true;
+      var key = (form.querySelector('[name="access_key"]') || {}).value || "";
+      if (!key || key.indexOf("REPLACE") === 0) {
+        errorEl.querySelector("p").textContent =
+          "The form isn't connected yet — add your Web3Forms access key in contact.html before going live.";
+        errorEl.hidden = false;
+        success.hidden = true;
         return;
       }
 
-      var submitBtn = form.querySelector('button[type="submit"]');
-      var originalLabel = submitBtn.textContent;
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Sending…";
-      errorBox.hidden = true;
-
-      var formData = new FormData(form);
-      var payload = Object.fromEntries(formData.entries());
+      var btn  = form.querySelector('button[type="submit"]');
+      var orig = btn.textContent;
+      btn.disabled    = true;
+      btn.textContent = "Sending…";
+      errorEl.hidden  = true;
 
       fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
+        method:  "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body:    JSON.stringify(Object.fromEntries(new FormData(form)))
       })
-        .then(function (res) {
-          return res.json();
-        })
-        .then(function (result) {
-          if (result.success) {
-            form.hidden = true;
-            successBox.hidden = false;
-            successBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d.success) {
+            form.hidden    = true;
+            success.hidden = false;
+            success.scrollIntoView({ behavior: "smooth", block: "center" });
           } else {
-            throw new Error(result.message || "Submission failed");
+            throw new Error();
           }
         })
         .catch(function () {
-          errorBox.querySelector("p").textContent =
-            "Something went wrong sending that. Please try again, or email us directly.";
-          errorBox.hidden = false;
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalLabel;
+          errorEl.querySelector("p").textContent =
+            "Something went wrong — please try again or email us directly.";
+          errorEl.hidden  = false;
+          btn.disabled    = false;
+          btn.textContent = orig;
         });
     });
   }
