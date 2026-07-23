@@ -1,155 +1,985 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CRUX — Quiet infrastructure for creators</title>
-  <meta name="description" content="CRUX builds the digital products, communities, and revenue systems behind content creators — quietly, under their name." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,350;0,9..144,450;0,9..144,500;0,9..144,600;1,9..144,450;1,9..144,500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Solve For X — a puzzle for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1E1A2E;
+    --ink-2:#14111F;
+    --paper:#FBF6EF;
+    --paper-2:#F1E8D8;
+    --blossom:#FF6F91;
+    --blossom-dark:#E24E6B;
+    --marigold:#FFC857;
+    --violet:#8C7AA6;
+    --text:#241F33;
+    --text-soft:#6A6280;
+    --entered:#4A3F73;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,111,145,0.16), transparent 60%),
+      radial-gradient(1px 1px at 20% 30%, rgba(251,246,239,0.5) 50%, transparent),
+      radial-gradient(1px 1px at 70% 15%, rgba(251,246,239,0.4) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 85% 55%, rgba(251,246,239,0.35) 50%, transparent),
+      radial-gradient(1px 1px at 12% 70%, rgba(251,246,239,0.4) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 45% 85%, rgba(251,246,239,0.3) 50%, transparent),
+      radial-gradient(1px 1px at 92% 80%, rgba(251,246,239,0.4) 50%, transparent),
+      linear-gradient(180deg, var(--ink), var(--ink-2));
+    background-attachment:fixed;
+    font-family:'Work Sans', sans-serif;
+    color:var(--paper);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:2rem 1rem 4rem;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom:1.6rem;
+    max-width:420px;
+  }
+  h1{
+    font-family:'Instrument Serif', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(2.4rem, 8vw, 3.2rem);
+    margin:0 0 .35rem;
+    letter-spacing:.01em;
+  }
+  header p{
+    margin:0;
+    color:rgba(251,246,239,0.62);
+    font-size:.95rem;
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    max-width:420px;
+  }
+
+  /* ---- tucked note (signature element) ---- */
+  .tucked-note{
+    display:none;
+    position:relative;
+    background:#FFFDF6;
+    color:var(--text);
+    font-family:'Instrument Serif', serif;
+    font-size:1.05rem;
+    line-height:1.4;
+    padding:.9rem 1.1rem 1.3rem;
+    margin:0 1.2rem -1.1rem;
+    transform:rotate(-2deg);
+    box-shadow:0 10px 24px rgba(0,0,0,0.28);
+    border-radius:2px;
+    z-index:2;
+  }
+  .tucked-note.show{display:block;}
+  .tucked-note::before{
+    content:"";
+    position:absolute;
+    top:-10px; left:50%;
+    transform:translateX(-50%) rotate(-4deg);
+    width:56px; height:20px;
+    background:rgba(255,200,87,0.55);
+    border:1px solid rgba(255,200,87,0.7);
+  }
+  .tucked-note .label{
+    display:block;
+    font-family:'Work Sans', sans-serif;
+    font-size:.66rem;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--blossom-dark);
+    margin-bottom:.3rem;
+    font-style:normal;
+    font-weight:600;
+  }
+
+  .card{
+    position:relative;
+    background:var(--paper);
+    border-radius:20px;
+    padding:1.4rem 1.2rem 1.6rem;
+    box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    z-index:1;
+  }
+
+  /* difficulty pills */
+  .pills{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:.4rem;
+    margin-bottom:1rem;
+  }
+  .pill{
+    font-family:'Work Sans', sans-serif;
+    font-size:.78rem;
+    font-weight:600;
+    padding:.5rem .3rem;
+    border-radius:999px;
+    border:1.5px solid rgba(36,31,51,0.18);
+    background:transparent;
+    color:var(--text-soft);
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .pill.active{
+    background:var(--marigold);
+    border-color:var(--marigold);
+    color:var(--text);
+  }
+  .pill:focus-visible, button:focus-visible, textarea:focus-visible, input:focus-visible{
+    outline:2px solid var(--blossom);
+    outline-offset:2px;
+  }
+
+  /* meta row */
+  .meta-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:.8rem;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+    color:var(--text-soft);
+  }
+  .meta-row .timer{
+    color:var(--text);
+    font-weight:500;
+    letter-spacing:.02em;
+  }
+  .icon-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--text-soft);
+    font-family:'Work Sans', sans-serif;
+    font-size:.8rem;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:.3rem;
+    padding:.2rem .4rem;
+  }
+  .icon-btn:hover{color:var(--blossom-dark);}
+
+  /* grid */
+  .grid-wrap{
+    position:relative;
+  }
+  .grid{
+    display:flex;
+    flex-direction:column;
+    border:3px solid var(--text);
+    border-radius:10px;
+    overflow:hidden;
+    background:var(--paper);
+  }
+  .row{display:grid; grid-template-columns:repeat(9,1fr);}
+  .row:nth-child(3n){border-bottom:2px solid var(--text);}
+  .cell{
+    aspect-ratio:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid rgba(36,31,51,0.14);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(1rem, 4.6vw, 1.35rem);
+    color:var(--text);
+    font-weight:600;
+    background:var(--paper);
+    cursor:pointer;
+    user-select:none;
+    position:relative;
+    transition:background .1s ease;
+  }
+  .cell:nth-child(3n){border-right:2px solid var(--text);}
+  .cell.given{color:var(--text);}
+  .cell.entered{color:var(--entered); font-weight:500;}
+  .cell.peer{background:var(--paper-2);}
+  .cell.selected{background:rgba(255,200,87,0.55);}
+  .cell.same-value{background:rgba(255,111,145,0.20);}
+  .cell.selected.same-value{background:rgba(255,200,87,0.6);}
+  .cell.conflict{color:var(--blossom-dark); outline:2px solid var(--blossom-dark); outline-offset:-2px; z-index:1;}
+  .cell.hinted{animation:pop .3s ease;}
+  .cell.shake{animation:shake .32s ease;}
+  @keyframes pop{0%{transform:scale(1.35);}100%{transform:scale(1);}}
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-3px);}
+    75%{transform:translateX(3px);}
+  }
+
+  .notes-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    grid-template-rows:repeat(3,1fr);
+    width:88%; height:88%;
+  }
+  .notes-grid span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.55rem;
+    font-weight:500;
+    color:var(--violet);
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  .grid-overlay{
+    position:absolute; inset:0;
+    background:rgba(251,246,239,0.92);
+    display:none;
+    align-items:center; justify-content:center;
+    border-radius:10px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    color:var(--text-soft);
+    font-size:.9rem;
+    letter-spacing:.02em;
+  }
+  .grid-overlay.show{display:flex;}
+
+  /* number pad */
+  .pad{
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    gap:.35rem;
+    margin-top:1rem;
+  }
+  .pad button{
+    aspect-ratio:1;
+    border-radius:8px;
+    border:1.5px solid rgba(36,31,51,0.16);
+    background:#fff;
+    color:var(--text);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:1rem;
+    font-weight:500;
+    cursor:pointer;
+  }
+  .pad button:active{background:var(--paper-2);}
+
+  .actions{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.5rem;
+    margin-top:.7rem;
+  }
+  .actions button{
+    padding:.55rem .4rem;
+    border-radius:8px;
+    border:1.5px solid rgba(36,31,51,0.16);
+    background:#fff;
+    color:var(--text);
+    font-family:'Work Sans', sans-serif;
+    font-size:.8rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .actions button.on{background:var(--blossom); border-color:var(--blossom); color:#fff;}
+
+  /* personalize panel */
+  .personalize{
+    margin-top:1.3rem;
+    border-top:1px dashed rgba(36,31,51,0.2);
+    padding-top:1rem;
+  }
+  .personalize-toggle{
+    width:100%;
+    background:none;
+    border:none;
+    text-align:left;
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:.88rem;
+    color:var(--text);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0;
+  }
+  .personalize-toggle .chev{transition:transform .2s ease; color:var(--text-soft);}
+  .personalize-toggle.open .chev{transform:rotate(180deg);}
+  .personalize-body{
+    display:none;
+    margin-top:.8rem;
+  }
+  .personalize-body.show{display:block;}
+  .personalize-body textarea{
+    width:100%;
+    min-height:70px;
+    resize:none;
+    border-radius:10px;
+    border:1.5px solid rgba(36,31,51,0.18);
+    padding:.6rem .7rem;
+    font-family:'Instrument Serif', serif;
+    font-size:1rem;
+    color:var(--text);
+    background:#fff;
+  }
+  .char-count{
+    text-align:right;
+    font-size:.72rem;
+    color:var(--text-soft);
+    margin:.25rem 0 .7rem;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .download-btn{
+    width:100%;
+    padding:.75rem;
+    border-radius:10px;
+    border:none;
+    background:var(--blossom);
+    color:#fff;
+    font-family:'Work Sans', sans-serif;
+    font-weight:700;
+    font-size:.92rem;
+    cursor:pointer;
+  }
+  .download-btn:hover{background:var(--blossom-dark);}
+  .hint-text{
+    font-size:.74rem;
+    color:var(--text-soft);
+    margin-top:.6rem;
+    line-height:1.4;
+  }
+
+  .sent-flag{
+    display:none;
+    text-align:center;
+    font-family:'Work Sans', sans-serif;
+    font-size:.78rem;
+    font-weight:600;
+    color:rgba(251,246,239,0.55);
+    margin-top:1rem;
+    letter-spacing:.02em;
+  }
+  .sent-flag.show{display:block;}
+
+  /* win overlay */
+  .win-overlay{
+    position:fixed; inset:0;
+    background:rgba(20,17,31,0.78);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:1.5rem;
+    z-index:20;
+  }
+  .win-overlay.show{display:flex;}
+  .win-card{
+    background:var(--paper);
+    border-radius:18px;
+    padding:2rem 1.6rem;
+    max-width:340px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  }
+  .win-card h2{
+    font-family:'Instrument Serif', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:2.1rem;
+    color:var(--text);
+    margin:0 0 .4rem;
+  }
+  .win-card p{
+    color:var(--text-soft);
+    font-size:.9rem;
+    margin:0 0 1.3rem;
+  }
+  .win-card .stats{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--text);
+    font-size:1rem;
+    margin-bottom:1.3rem;
+  }
+  .win-card button{
+    width:100%;
+    padding:.7rem;
+    border-radius:10px;
+    border:none;
+    background:var(--text);
+    color:var(--paper);
+    font-family:'Work Sans', sans-serif;
+    font-weight:700;
+    font-size:.9rem;
+    cursor:pointer;
+    margin-top:.5rem;
+  }
+
+  footer{
+    margin-top:1.6rem;
+    font-size:.72rem;
+    color:rgba(251,246,239,0.35);
+    text-align:center;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  .noscript-msg{
+    max-width:340px;
+    margin:3rem auto;
+    background:var(--paper);
+    color:var(--text);
+    border-radius:16px;
+    padding:1.6rem;
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    font-family:'Work Sans', sans-serif;
+    font-size:.92rem;
+    line-height:1.5;
+  }
+  .noscript-msg strong{display:block; font-family:'Instrument Serif', serif; font-style:italic; font-size:1.5rem; margin-bottom:.5rem;}
+</style>
 </head>
 <body>
 
-  <!-- Nav -->
-  <nav class="site-nav">
-    <a href="/" class="nav-logo">CR<span>U</span>X</a>
-    <a href="contact.html" class="nav-cta">Contact</a>
-    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+  <noscript>
+    <div class="noscript-msg">
+      <strong>Almost there</strong>
+      This is a preview, not the puzzle. Tap the Share icon and choose "Open in Safari" (or "Open in Browser") to play.
+    </div>
+  </noscript>
 
-  <div class="nav-mobile">
-    <span class="eyebrow">CRUX</span>
-    <a href="/">Introduction</a>
-    <a href="practice.html">The Practice</a>
-    <a href="catalogue.html">Catalogue</a>
-    <a href="contact.html">Contact</a>
+  <header>
+    <h1>Solve For X</h1>
+    <p id="subtitle">A little puzzle, just for you.</p>
+  </header>
+
+  <div class="stage">
+    <div class="tucked-note" id="tuckedNote">
+      <span class="label">for you</span>
+      <span id="tuckedNoteText"></span>
+    </div>
+
+    <div class="card">
+      <div class="pills" id="pills">
+        <button class="pill" data-diff="easy">Easy</button>
+        <button class="pill" data-diff="medium">Medium</button>
+        <button class="pill" data-diff="hard">Hard</button>
+        <button class="pill" data-diff="expert">Expert</button>
+      </div>
+
+      <div class="meta-row">
+        <button class="icon-btn" id="newPuzzleBtn">↻ New puzzle</button>
+        <span class="timer" id="timer">00:00</span>
+        <button class="icon-btn" id="hintBtn">💡 Hint</button>
+      </div>
+
+      <div class="grid-wrap">
+        <div class="grid" id="grid"></div>
+        <div class="grid-overlay" id="gridOverlay">shuffling the numbers…</div>
+      </div>
+
+      <div class="pad" id="pad"></div>
+
+      <div class="actions">
+        <button id="eraseBtn">⌫ Erase</button>
+        <button id="notesBtn">✎ Notes</button>
+        <button id="checkBtn">✓ Check</button>
+      </div>
+
+      <div class="personalize">
+        <button class="personalize-toggle" id="personalizeToggle">
+          <span>+ Add a note & send this puzzle</span>
+          <span class="chev">⌄</span>
+        </button>
+        <div class="personalize-body" id="personalizeBody">
+          <textarea id="noteInput" maxlength="140" placeholder="Write a little note to tuck in…"></textarea>
+          <div class="char-count"><span id="charCount">0</span>/140</div>
+          <button class="download-btn" id="downloadBtn">Download to send</button>
+          <p class="hint-text">This saves a copy of <em>this exact puzzle</em> (and your note) as a new file. Send it to them however you like — they'll open it and see it right away, no account needed.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="sent-flag" id="sentFlag">someone made this puzzle for you 💌</p>
   </div>
 
-  <main>
+  <footer>made with Claude · your solve time is just between you and the grid</footer>
 
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero-ghost" aria-hidden="true">CRUX</div>
-      <span class="eyebrow hero-eyebrow">I — Introduction</span>
-      <h1>The quiet infrastructure behind the creators your audience already trusts.</h1>
-      <p class="hero-sub">CRUX operates behind a small number of content creators, building the products, communities, and revenue systems their audience never sees us touch. We don't appear in the credits — that's the point.</p>
-      <div class="hero-bottom">
-        <a href="contact.html" class="btn btn-primary">Start a Conversation</a>
-        <span class="hero-scroll" aria-hidden="true">Scroll</span>
-      </div>
-    </section>
-
-    <!-- Marquee -->
-    <div class="marquee-band" aria-hidden="true">
-      <div class="marquee-track">
-        <span class="m-item">The Vault</span><span class="m-dot">·</span>
-        <span class="m-item">Premium Communities</span><span class="m-dot">·</span>
-        <span class="m-item">Monetization Audits</span><span class="m-dot">·</span>
-        <span class="m-item">CRUX</span><span class="m-dot">·</span>
-        <span class="m-item">Digital Products</span><span class="m-dot">·</span>
-        <span class="m-item">Silent Operator</span><span class="m-dot">·</span>
-        <span class="m-item">Content Creators</span><span class="m-dot">·</span>
-        <span class="m-item">Shadow Operations</span><span class="m-dot">·</span>
-        <!-- duplicate for seamless loop -->
-        <span class="m-item">The Vault</span><span class="m-dot">·</span>
-        <span class="m-item">Premium Communities</span><span class="m-dot">·</span>
-        <span class="m-item">Monetization Audits</span><span class="m-dot">·</span>
-        <span class="m-item">CRUX</span><span class="m-dot">·</span>
-        <span class="m-item">Digital Products</span><span class="m-dot">·</span>
-        <span class="m-item">Silent Operator</span><span class="m-dot">·</span>
-        <span class="m-item">Content Creators</span><span class="m-dot">·</span>
-        <span class="m-item">Shadow Operations</span><span class="m-dot">·</span>
-      </div>
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-card">
+      <h2>Solved.</h2>
+      <p id="winMessage">Nicely done.</p>
+      <div class="stats" id="winStats"></div>
+      <button id="playAgainBtn">Play another</button>
     </div>
+  </div>
 
-    <!-- Three disciplines -->
-    <div class="sec">
-      <span class="eyebrow">Three Quiet Disciplines</span>
-      <h2 style="margin-top:14px;max-width:20ch;">One operator, three ways to turn attention into revenue.</h2>
+  <script id="embed-data" type="application/json">{}</script>
+  <script>
+  (function(){
+    "use strict";
 
-      <div class="pillars">
-        <div class="pillar">
-          <span class="pillar-num">The Vault</span>
-          <h3>Digital Lookbooks</h3>
-          <p>A private, paywalled archive built and kept current under your name — for the audience that already asks how you do it.</p>
-          <a href="catalogue.html#vault" class="pillar-link">Learn more →</a>
-        </div>
-        <div class="pillar">
-          <span class="pillar-num">Communities</span>
-          <h3>Premium Paid Communities</h3>
-          <p>A Discord space for your most invested fans — architected, moderated, and run for you, end to end.</p>
-          <a href="catalogue.html#communities" class="pillar-link">Learn more →</a>
-        </div>
-        <div class="pillar">
-          <span class="pillar-num">Audits</span>
-          <h3>Monetization &amp; Digital Audits</h3>
-          <p>An honest read on what your specific audience would pay for, before anything gets built.</p>
-          <a href="catalogue.html#audits" class="pillar-link">Learn more →</a>
-        </div>
-      </div>
-    </div>
+    /* ---------------- sudoku engine ---------------- */
+    function emptyBoard(){return Array.from({length:9},()=>Array(9).fill(0));}
+    function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
 
-    <!-- Who it's for (alt bg) -->
-    <div class="sec-alt">
-      <div class="sec">
-        <span class="eyebrow">Who This Is For</span>
-        <h2 style="margin-top:14px;max-width:18ch;">You don't need a big team. You need the right system.</h2>
-        <div class="fit-split">
-          <ul class="fit-list">
-            <li>You have a niche, engaged audience that already trusts your judgment — even if it's not enormous yet.</li>
-            <li>People regularly ask you "where do you get that" or "how do you actually do this."</li>
-          </ul>
-          <ul class="fit-list">
-            <li>You don't have the time, team, or interest in running a storefront, a Discord, or a monetization roadmap yourself.</li>
-            <li>You'd rather stay the creator your audience knows than become the operator behind the scenes.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    function isValid(board,r,c,n){
+      for(let i=0;i<9;i++){
+        if(i!==c && board[r][i]===n) return false;
+        if(i!==r && board[i][c]===n) return false;
+      }
+      const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+      for(let i=0;i<3;i++) for(let j=0;j<3;j++){
+        const rr=br+i, cc=bc+j;
+        if((rr!==r||cc!==c) && board[rr][cc]===n) return false;
+      }
+      return true;
+    }
 
-    <!-- Explore -->
-    <div class="explore">
-      <div class="explore-head">
-        <span class="explore-title">Explore</span>
-        <p class="explore-sub">Navigate the full picture of what CRUX is and what we build.</p>
-      </div>
-      <div class="explore-grid">
-        <div class="explore-current" aria-current="page">
-          <span class="ex-num">I</span>
-          <span class="ex-name">Introduction</span>
-          <span class="ex-desc">Who CRUX is and the singular thing we do for creators.</span>
-        </div>
-        <a href="practice.html" class="explore-card">
-          <span class="ex-num">II</span>
-          <span class="ex-name">The Practice</span>
-          <span class="ex-desc">The three-stage process behind every partnership we run.</span>
-          <span class="ex-arrow">→</span>
-        </a>
-        <a href="catalogue.html" class="explore-card">
-          <span class="ex-num">III</span>
-          <span class="ex-name">Catalogue</span>
-          <span class="ex-desc">Three systems — Vault, Communities, Audits — built for your audience.</span>
-          <span class="ex-arrow">→</span>
-        </a>
-        <a href="contact.html" class="explore-card">
-          <span class="ex-num">IV</span>
-          <span class="ex-name">Contact</span>
-          <span class="ex-desc">Start a conversation. We follow up within 48 hours.</span>
-          <span class="ex-arrow">→</span>
-        </a>
-      </div>
-      <div class="explore-foot">
-        <span>© 2026 CRUX. All partnerships are confidential.</span>
-        <a href="mailto:tanishq@buildwithcrux.com" style="color:inherit;">tanishq@buildwithcrux.com</a>
-      </div>
-    </div>
+    function generateSolved(){
+      const board = emptyBoard();
+      function fill(pos){
+        if(pos===81) return true;
+        const r=Math.floor(pos/9), c=pos%9;
+        const nums = shuffle([1,2,3,4,5,6,7,8,9]);
+        for(const n of nums){
+          if(isValid(board,r,c,n)){
+            board[r][c]=n;
+            if(fill(pos+1)) return true;
+            board[r][c]=0;
+          }
+        }
+        return false;
+      }
+      fill(0);
+      return board;
+    }
 
-  </main>
+    function popcount(mask){let c=0;while(mask){c+=mask&1;mask>>=1;}return c;}
 
-  <script src="script.js"></script>
+    function countSolutions(board, limit){
+      let count=0;
+      const b = board.map(row=>row.slice());
+      function candidateMask(r,c){
+        let mask=0;
+        for(let n=1;n<=9;n++){ if(isValid(b,r,c,n)) mask |= (1<<n); }
+        return mask;
+      }
+      function solve(){
+        if(count>=limit) return;
+        let bestR=-1,bestC=-1,bestMask=0,bestN=10;
+        outer:
+        for(let r=0;r<9;r++){
+          for(let c=0;c<9;c++){
+            if(b[r][c]===0){
+              const mask=candidateMask(r,c);
+              const n=popcount(mask);
+              if(n===0) return;
+              if(n<bestN){
+                bestN=n; bestMask=mask; bestR=r; bestC=c;
+                if(n===1) break outer;
+              }
+            }
+          }
+        }
+        if(bestR===-1){ count++; return; }
+        for(let d=1; d<=9; d++){
+          if(bestMask & (1<<d)){
+            b[bestR][bestC]=d;
+            solve();
+            b[bestR][bestC]=0;
+            if(count>=limit) return;
+          }
+        }
+      }
+      solve();
+      return count;
+    }
+
+    function makePuzzle(solved, targetClues){
+      const puzzle = solved.map(row=>row.slice());
+      let clues = 81;
+      let passes = 0;
+      while(clues > targetClues && passes < 3){
+        const filled = [];
+        for(let r=0;r<9;r++) for(let c=0;c<9;c++) if(puzzle[r][c]!==0) filled.push([r,c]);
+        shuffle(filled);
+        let removedThisPass = 0;
+        for(const [r,c] of filled){
+          if(clues<=targetClues) break;
+          const backup = puzzle[r][c];
+          puzzle[r][c]=0;
+          const solutions = countSolutions(puzzle,2);
+          if(solutions!==1){
+            puzzle[r][c]=backup;
+          } else {
+            clues--; removedThisPass++;
+          }
+        }
+        passes++;
+        if(removedThisPass===0) break;
+      }
+      return {puzzle, clues};
+    }
+
+    const DIFF_TARGETS = {easy:40, medium:33, hard:27, expert:22};
+
+    /* ---------------- state ---------------- */
+    const state = {
+      difficulty:'medium',
+      clues:null, solution:null, values:null, notes:null,
+      selected:null, notesMode:false, hints:0,
+      startTime:null, timerInterval:null, elapsedFrozen:0,
+      note:'', recipientMode:false
+    };
+
+    /* ---------------- dom refs ---------------- */
+    const gridEl = document.getElementById('grid');
+    const gridOverlay = document.getElementById('gridOverlay');
+    const padEl = document.getElementById('pad');
+    const pillsEl = document.getElementById('pills');
+    const timerEl = document.getElementById('timer');
+    const tuckedNote = document.getElementById('tuckedNote');
+    const tuckedNoteText = document.getElementById('tuckedNoteText');
+    const sentFlag = document.getElementById('sentFlag');
+    const subtitle = document.getElementById('subtitle');
+    const winOverlay = document.getElementById('winOverlay');
+    const winStats = document.getElementById('winStats');
+
+    /* ---------------- render ---------------- */
+    function buildGridDom(){
+      gridEl.innerHTML='';
+      for(let r=0;r<9;r++){
+        const row = document.createElement('div');
+        row.className='row';
+        for(let c=0;c<9;c++){
+          const cell = document.createElement('div');
+          cell.className='cell';
+          cell.dataset.r=r; cell.dataset.c=c;
+          cell.tabIndex=0;
+          cell.addEventListener('click', ()=>selectCell(r,c));
+          row.appendChild(cell);
+        }
+        gridEl.appendChild(row);
+      }
+    }
+
+    function buildPadDom(){
+      padEl.innerHTML='';
+      for(let d=1; d<=9; d++){
+        const btn = document.createElement('button');
+        btn.textContent = d;
+        btn.addEventListener('click', ()=>inputDigit(d));
+        padEl.appendChild(btn);
+      }
+    }
+
+    function cellEl(r,c){ return gridEl.children[r].children[c]; }
+
+    function render(){
+      for(let r=0;r<9;r++){
+        for(let c=0;c<9;c++){
+          const el = cellEl(r,c);
+          const given = state.clues[r][c];
+          const val = state.values[r][c];
+          el.className='cell';
+          el.innerHTML='';
+          if(given!==0){
+            el.classList.add('given');
+            el.textContent = given;
+          } else if(val!==0){
+            el.classList.add('entered');
+            el.textContent = val;
+            if(val !== state.solution[r][c]) el.classList.add('conflict');
+          } else if(state.notes[r][c].size>0){
+            const ng = document.createElement('div');
+            ng.className='notes-grid';
+            for(let n=1;n<=9;n++){
+              const span = document.createElement('span');
+              span.textContent = state.notes[r][c].has(n) ? n : '';
+              ng.appendChild(span);
+            }
+            el.appendChild(ng);
+          }
+        }
+      }
+      applyHighlights();
+      // difficulty pills
+      [...pillsEl.children].forEach(p=>p.classList.toggle('active', p.dataset.diff===state.difficulty));
+      document.getElementById('notesBtn').classList.toggle('on', state.notesMode);
+    }
+
+    function applyHighlights(){
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++) cellEl(r,c).classList.remove('peer','selected','same-value');
+      if(!state.selected) return;
+      const {r:sr,c:sc} = state.selected;
+      const selVal = state.values[sr][sc] || state.clues[sr][sc];
+      const br=Math.floor(sr/3)*3, bc=Math.floor(sc/3)*3;
+      for(let r=0;r<9;r++){
+        for(let c=0;c<9;c++){
+          const sameRow = r===sr, sameCol = c===sc;
+          const sameBox = r>=br && r<br+3 && c>=bc && c<bc+3;
+          if(sameRow||sameCol||sameBox) cellEl(r,c).classList.add('peer');
+          if(selVal){
+            const v = state.values[r][c] || state.clues[r][c];
+            if(v===selVal) cellEl(r,c).classList.add('same-value');
+          }
+        }
+      }
+      cellEl(sr,sc).classList.add('selected');
+    }
+
+    /* ---------------- interaction ---------------- */
+    function selectCell(r,c){
+      state.selected = {r,c};
+      applyHighlights();
+    }
+
+    function inputDigit(d){
+      if(!state.selected) return;
+      const {r,c} = state.selected;
+      if(state.clues[r][c]!==0) return; // can't edit givens
+      if(state.notesMode){
+        if(state.notes[r][c].has(d)) state.notes[r][c].delete(d);
+        else state.notes[r][c].add(d);
+        state.values[r][c]=0;
+      } else {
+        state.values[r][c]=d;
+        state.notes[r][c].clear();
+        if(d !== state.solution[r][c]){
+          render();
+          const el = cellEl(r,c);
+          el.classList.add('shake');
+          setTimeout(()=>el.classList.remove('shake'), 320);
+        }
+      }
+      render();
+      checkWin();
+    }
+
+    function clearCell(){
+      if(!state.selected) return;
+      const {r,c} = state.selected;
+      if(state.clues[r][c]!==0) return;
+      state.values[r][c]=0;
+      state.notes[r][c].clear();
+      render();
+    }
+
+    function giveHint(){
+      let target = state.selected;
+      if(!target || state.clues[target.r][target.c]!==0 || state.values[target.r][target.c]===state.solution[target.r][target.c]){
+        outer:
+        for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+          if(state.clues[r][c]===0 && state.values[r][c] !== state.solution[r][c]){
+            target = {r,c}; break outer;
+          }
+        }
+      }
+      if(!target) return;
+      const {r,c} = target;
+      if(state.clues[r][c]!==0) return;
+      state.values[r][c] = state.solution[r][c];
+      state.notes[r][c].clear();
+      state.hints++;
+      state.selected = target;
+      render();
+      cellEl(r,c).classList.add('hinted');
+      setTimeout(()=>cellEl(r,c).classList.remove('hinted'), 300);
+      checkWin();
+    }
+
+    function checkWin(){
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+        const v = state.values[r][c] || state.clues[r][c];
+        if(v !== state.solution[r][c]) return false;
+      }
+      onWin();
+      return true;
+    }
+
+    function onWin(){
+      stopTimer();
+      const t = state.elapsedFrozen;
+      const mm = String(Math.floor(t/60)).padStart(2,'0');
+      const ss = String(t%60).padStart(2,'0');
+      const diffLabel = state.difficulty[0].toUpperCase()+state.difficulty.slice(1);
+      winStats.textContent = `${diffLabel} · ${mm}:${ss} · ${state.hints} hint${state.hints===1?'':'s'}`;
+      winOverlay.classList.add('show');
+    }
+
+    /* ---------------- timer ---------------- */
+    function startTimer(){
+      stopTimer();
+      state.startTime = Date.now();
+      state.timerInterval = setInterval(()=>{
+        state.elapsedFrozen = Math.floor((Date.now()-state.startTime)/1000);
+        const mm = String(Math.floor(state.elapsedFrozen/60)).padStart(2,'0');
+        const ss = String(state.elapsedFrozen%60).padStart(2,'0');
+        timerEl.textContent = `${mm}:${ss}`;
+      }, 1000);
+    }
+    function stopTimer(){
+      if(state.timerInterval) clearInterval(state.timerInterval);
+      state.timerInterval=null;
+    }
+
+    /* ---------------- puzzle lifecycle ---------------- */
+    function loadPuzzle(clues, solution, difficulty){
+      state.clues = clues.map(row=>row.slice());
+      state.solution = solution.map(row=>row.slice());
+      state.values = clues.map(row=>row.slice());
+      state.notes = Array.from({length:9},()=>Array.from({length:9},()=>new Set()));
+      state.difficulty = difficulty;
+      state.selected = null;
+      state.hints = 0;
+      state.elapsedFrozen = 0;
+      timerEl.textContent = '00:00';
+      winOverlay.classList.remove('show');
+      render();
+      startTimer();
+    }
+
+    function newPuzzle(difficulty){
+      state.difficulty = difficulty;
+      gridOverlay.classList.add('show');
+      setTimeout(()=>{
+        const solved = generateSolved();
+        const target = DIFF_TARGETS[difficulty] ?? 33;
+        const {puzzle} = makePuzzle(solved, target);
+        gridOverlay.classList.remove('show');
+        loadPuzzle(puzzle, solved, difficulty);
+      }, 30);
+    }
+
+    /* ---------------- personalize / share ---------------- */
+    const personalizeToggle = document.getElementById('personalizeToggle');
+    const personalizeBody = document.getElementById('personalizeBody');
+    const noteInput = document.getElementById('noteInput');
+    const charCount = document.getElementById('charCount');
+
+    personalizeToggle.addEventListener('click', ()=>{
+      const open = personalizeBody.classList.toggle('show');
+      personalizeToggle.classList.toggle('open', open);
+    });
+
+    noteInput.addEventListener('input', ()=>{
+      charCount.textContent = noteInput.value.length;
+      state.note = noteInput.value;
+      if(state.note.trim()){
+        tuckedNoteText.textContent = state.note;
+        tuckedNote.classList.add('show');
+      } else {
+        tuckedNote.classList.remove('show');
+      }
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      const embedScript = document.getElementById('embed-data');
+      const payload = {
+        puzzle: state.clues,
+        solution: state.solution,
+        difficulty: state.difficulty,
+        note: state.note || ''
+      };
+      const originalContent = embedScript.textContent;
+      embedScript.textContent = JSON.stringify(payload);
+      const htmlSource = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      embedScript.textContent = originalContent; // restore sender's own session
+
+      const blob = new Blob([htmlSource], {type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'solve-for-you.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(url), 2000);
+    });
+
+    /* ---------------- controls ---------------- */
+    pillsEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.pill');
+      if(!btn) return;
+      newPuzzle(btn.dataset.diff);
+    });
+    document.getElementById('newPuzzleBtn').addEventListener('click', ()=>newPuzzle(state.difficulty));
+    document.getElementById('eraseBtn').addEventListener('click', clearCell);
+    document.getElementById('hintBtn').addEventListener('click', giveHint);
+    document.getElementById('notesBtn').addEventListener('click', ()=>{
+      state.notesMode = !state.notesMode;
+      render();
+    });
+    document.getElementById('checkBtn').addEventListener('click', ()=>{
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++) cellEl(r,c).classList.remove('conflict');
+      let anyFilled=false;
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+        if(state.values[r][c]!==0){
+          anyFilled=true;
+          if(state.values[r][c] !== state.solution[r][c]) cellEl(r,c).classList.add('conflict');
+        }
+      }
+      if(!anyFilled) return;
+    });
+    document.getElementById('playAgainBtn').addEventListener('click', ()=>{
+      winOverlay.classList.remove('show');
+      newPuzzle(state.difficulty);
+    });
+
+    document.addEventListener('keydown', (e)=>{
+      if(document.activeElement === noteInput) return;
+      if(!state.selected){
+        if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){
+          state.selected = {r:0,c:0}; render();
+        }
+        return;
+      }
+      let {r,c} = state.selected;
+      if(e.key==='ArrowUp'){ r=Math.max(0,r-1); e.preventDefault(); }
+      else if(e.key==='ArrowDown'){ r=Math.min(8,r+1); e.preventDefault(); }
+      else if(e.key==='ArrowLeft'){ c=Math.max(0,c-1); e.preventDefault(); }
+      else if(e.key==='ArrowRight'){ c=Math.min(8,c+1); e.preventDefault(); }
+      else if(e.key>='1' && e.key<='9'){ inputDigit(parseInt(e.key,10)); return; }
+      else if(e.key==='Backspace' || e.key==='Delete' || e.key==='0'){ clearCell(); return; }
+      else if(e.key.toLowerCase()==='n'){ state.notesMode=!state.notesMode; render(); return; }
+      else { return; }
+      state.selected = {r,c};
+      applyHighlights();
+    });
+
+    /* ---------------- boot ---------------- */
+    buildGridDom();
+    buildPadDom();
+
+    let embedded = null;
+    try{
+      embedded = JSON.parse(document.getElementById('embed-data').textContent);
+    }catch(e){ embedded = null; }
+
+    if(embedded && embedded.puzzle && embedded.solution){
+      state.recipientMode = true;
+      subtitle.textContent = 'Someone made this one for you.';
+      if(embedded.note && embedded.note.trim()){
+        tuckedNoteText.textContent = embedded.note;
+        tuckedNote.classList.add('show');
+        noteInput.value = embedded.note;
+        charCount.textContent = embedded.note.length;
+        state.note = embedded.note;
+      }
+      sentFlag.classList.add('show');
+      loadPuzzle(embedded.puzzle, embedded.solution, embedded.difficulty || 'medium');
+    } else {
+      newPuzzle('medium');
+    }
+  })();
+  </script>
 </body>
 </html>
